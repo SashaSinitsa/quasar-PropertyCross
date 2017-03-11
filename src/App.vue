@@ -12,4 +12,6 @@
 export default {}
 </script>
 
-<style></style>
+<style lang="styl">
+  @import '~src/themes/main.styl';
+</style>
