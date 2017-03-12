@@ -9,8 +9,10 @@ require(`./themes/app.${__THEME}.styl`)
 import Vue from 'vue'
 import Quasar from 'quasar'
 import router from './router'
+import VueJsonp from 'vue-jsonp'
 
 Vue.use(Quasar) // Install Quasar Framework
+Vue.use(VueJsonp, 5000)
 
 Quasar.start(() => {
   /* eslint-disable no-new */
