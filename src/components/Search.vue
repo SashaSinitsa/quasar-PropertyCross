@@ -51,8 +51,10 @@
           <div class="list">
             <div
               class="item item-link"
+              :style="hideItems"
               v-for="(item, index) in locations"
-              v-if="index < 6"
+              ref="locations"
+              v-if="index < 7"
               @click="item.handler()"
               >
               <div class="item-content has-secondary">
@@ -108,6 +110,11 @@ export default {
   },
 
   computed: {
+    hideItems: function () {
+      // return {
+      //   background: 'white'
+      // }
+    },
     // геттер вычисляемого значения
     reversedMessage: function () {
       // `this` указывает на экземпляр vm
@@ -116,6 +123,24 @@ export default {
   },
 
   methods: {
+    ref () {
+      var self = this
+      var height = document.documentElement.clientHeight
+      if (this.$refs.locations && this.$refs.locations.length !== 0) {
+        for (let i = 0; i < this.$refs.locations.length; i++) {
+          let rect = self.$refs.locations[i].getBoundingClientRect()
+          if ((height - rect.bottom) < 0) {
+            self.$refs.locations[i].style.display = 'none'
+            this.hideItems
+          }
+        }
+      }
+      else {
+        setTimeout(() => {
+          this.ref()
+        }, 10)
+      }
+    },
     getLocation () {
       var myLocation
       var self = this
@@ -138,6 +163,7 @@ export default {
               }
               else { console.log('Error, status code: ' + code) }
             }
+            this.ref()
           })
           .catch((error) => {
             console.log(error)
@@ -166,10 +192,10 @@ export default {
             }
             else if (code === '100' || code === '101' || code === '110') {
               self.locations = res.listings
-              console.log(res.listings)
             }
             else { console.log('Error, status code: ' + code) }
           }
+          this.ref()
         })
         .catch((error) => {
           console.log(error)
