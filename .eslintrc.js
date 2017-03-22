@@ -21,6 +21,9 @@ module.exports = {
   ],
   // add your custom rules here
   'rules': {
+    'no-multiple-empty-lines': 'off',
+    'no-trailing-spaces': 'off',
+    'padded-blocks': 'off',
     // allow paren-less arrow functions
     'arrow-parens': 0,
     'one-var': 0,

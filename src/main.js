@@ -9,16 +9,18 @@ require(`./themes/app.${__THEME}.styl`)
 import Vue from 'vue'
 import Quasar from 'quasar'
 import router from './router'
-import VueJsonp from 'vue-jsonp'
+import store from './store'
 
 Vue.use(Quasar) // Install Quasar Framework
-Vue.use(VueJsonp, 5000)
 
 Quasar.start(() => {
   /* eslint-disable no-new */
-  new Vue({
+  let x = new Vue({
     el: '#q-app',
     router,
+    store: store,
     render: h => h(require('./App'))
   })
+
+  console.dir(x)
 })
