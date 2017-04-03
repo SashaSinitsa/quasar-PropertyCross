@@ -23,13 +23,9 @@
     </div>
 
 
-    <div 
-      class="list item-delimiter"
-      style="width:100%;"
-      >
+    <div class="list item-delimiter list-property">
       <div
         class="item multiple-lines"
-        :style="hideItems"
         v-for="(item, index) in listProperties"
         ref="itemLocs"
         v-if="index < 10"
@@ -116,5 +112,10 @@ export default {
     border-radius: 3px
     ~.item-content
       margin-left: 110px
+  
+  .list-property
+     width:100%
+     overflow:auto
+     border: none 
     
 </style>

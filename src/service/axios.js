@@ -16,7 +16,10 @@ const ax = {
   search: function (term) {
     return axios.get(
       'http://api.nestoria.co.uk/api?country=uk&pretty=1&action=search_listings&encoding=json&listing_type=buy&page=1&place_name=' + term)
-    .then(res => res.data.response)
+    .then(res => {
+      console.log('res.data.res:', res.data.response)
+      return res.data.response
+    })
     .catch((err) => {
       console.log('errJsonp ', err)
       throw err

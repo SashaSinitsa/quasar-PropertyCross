@@ -44,6 +44,28 @@
         My Location
       </button>
 
+
+      <template v-if="(!errorMessage)&&(proposedLocations.length == 0)">
+        <p class="caption">
+          <div class="list">
+            <div
+              class="item item-link"
+              :style="hideItems"
+              v-for="(item, index) in getRecentSearches"
+              ref="itemLocs"
+              v-if="index < 7"
+              @click="search(item.slug)"
+              >
+              <div class="item-content has-secondary">
+                <div>{{ item.name }} ({{ item.amount }})</div>
+              </div>
+              <i class="item-secondary">keyboard_arrow_right</i>
+            </div>
+          </div>
+        </p>
+       </template>
+
+
       <!-- Create list of items -->
       <template v-if="errorMessage">
         <p class="caption">
@@ -53,7 +75,7 @@
       
       <template v-if="proposedLocations.length !== 0">
         <p class="caption">
-          Please select a location below:
+          Please select a location below: 
           <div class="list">
             <div
               class="item item-link"
@@ -124,6 +146,10 @@ export default {
 
     showIcon: function () {
       return this.statusLoad ? '' : 'search'
+    },
+
+    getRecentSearches: function () {
+      return this.$localStorage.get('recentSearches')
     },
     
 
@@ -218,14 +244,23 @@ export default {
       let self = this
 
       response      
-        .then((res) => {
-          console.log('resVue', res)
+        .then((res) => {          
           let resCode = res.application_response_code
           self.proposedLocations = res.locations
 
           switch (resCode) {
             case '100':
             case '110':
+              self._changeLocalStorage({
+                name: res.locations[0].title,
+                slug: res.locations[0].place_name,
+                amount: res.total_results
+              })
+              if (res.listings.length === 0) {
+                self.proposedLocations = []
+                self.errorMessage = 'There were no properties found for the given location.'
+                break
+              }
               store.commit('saveListProperties', res.listings)
               self.goTo('/results')
               break
@@ -260,8 +295,24 @@ export default {
     },
 
 
+    _changeLocalStorage (obj) {
+      // this.$localStorage.remove('recentSearches')
+      let i = 0
+      let recentSearches = this.$localStorage.get('recentSearches')
+
+      for (i; i < recentSearches.length; i++) {
+        if (recentSearches[i].slug === obj.slug || i > 3) {
+          recentSearches.splice(i, 1)
+        }
+      }
+
+      recentSearches.unshift(obj)
+      this.$localStorage.set('recentSearches', recentSearches)
+    },
+
+
     _getClientHeightTable () {
-      console.log('_ref()')
+      console.log('_getClientHeightTable()')
       var self = this
       var height = document.documentElement.clientHeight
       if (self.$refs.itemLocs && self.$refs.itemLocs.length !== 0) {
