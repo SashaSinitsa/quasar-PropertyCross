@@ -10,17 +10,21 @@ import Vue from 'vue'
 import Quasar from 'quasar'
 import router from './router'
 import store from './store'
+// import VueLocalStorage from 'vue-localstorage'
 
 Vue.use(Quasar) // Install Quasar Framework
+// Vue.use(VueLocalStorage)
 
 Quasar.start(() => {
   /* eslint-disable no-new */
-  let x = new Vue({
+  let vm = new Vue({
     el: '#q-app',
     router,
     store: store,
+    // localStorage: '22',
+    
     render: h => h(require('./App'))
   })
 
-  console.dir(x)
+  console.dir(vm)
 })

@@ -3,7 +3,7 @@
     <div slot="header" class="toolbar">
       <!-- Show title in NavigationWindow's toolbar -->
       <q-toolbar-title>
-        <div id="title">PropertyCross!!!</div>  
+        <div id="title">PropertyCross!</div>  
       </q-toolbar-title>
 
       <!-- Add rightNavButton to open favorites -->
@@ -190,7 +190,8 @@ export default {
     _getMyLocation (callback) {
       console.log('getMyLocation()')
       let self = this
-
+      console.log(localStorage.getItem('id'))
+      localStorage.setItem('id', '11')
       if (!navigator.geolocation) {
         self.errorMessage = 'The use of location is currently disabled.'
         self.statusLoad = false
@@ -229,7 +230,7 @@ export default {
               self.goTo('/results')
               break
             case '101':
-              self.proposedLocations = res.locations
+              // self.proposedLocations = res.locations
               self._ref()
               break
             case '200':
@@ -249,10 +250,10 @@ export default {
           self.statusLoad = false
         })
         .catch((err) => {
-          if (err.status === 408) {
-            self.errorMessage = `An error occurred while searching.
-              Please check your network connection and try again.`
-          }
+          // if (err.status === 408) {
+          self.errorMessage = `An error occurred while searching.
+            Please check your network connection and try again.`
+          // }
           self.statusLoad = false
           console.log('error: ', err)
         })
