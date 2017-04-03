@@ -231,7 +231,7 @@ export default {
               break
             case '101':
               // self.proposedLocations = res.locations
-              self._ref()
+              self._getClientHeightTable()
               break
             case '200':
             case '201':
@@ -260,7 +260,7 @@ export default {
     },
 
 
-    _ref () {
+    _getClientHeightTable () {
       console.log('_ref()')
       var self = this
       var height = document.documentElement.clientHeight
@@ -275,8 +275,8 @@ export default {
       }
       else {
         setTimeout(() => {
-          self._ref()
-        }, 10030)
+          self._getClientHeightTable()
+        }, 100)
       }
     },
 

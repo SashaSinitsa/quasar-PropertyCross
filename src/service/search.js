@@ -1,4 +1,5 @@
-import jsonp from 'src/service/jsonp'
+// import jsonp from 'src/service/jsonp'
+import jsonp from 'src/service/axios'
 
 const searchService = {
   search: function (q) {
