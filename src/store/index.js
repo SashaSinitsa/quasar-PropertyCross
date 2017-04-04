@@ -8,17 +8,22 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-  count: 0,
-  listProperties: []
+  totalResults: 0,
+  listProperties: [],
+  searchTerm: ''
 }
 
 const mutations = {
-  increment (state, n) {
-    state.count += n
+  saveTotalResults (state, n) {
+    state.totalResults = n
   },
 
   saveListProperties (state, obj) {
     state.listProperties = obj
+  },
+
+  saveSearchTerm (state, q) {
+    state.searchTerm = q
   }
 }
 

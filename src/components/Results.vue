@@ -10,7 +10,7 @@
 
       <!-- Show title in NavigationWindow's toolbar -->
       <q-toolbar-title>
-        PropertyCross
+        {{ listProperties.length }}  of {{ totalResults }} matches
       </q-toolbar-title>
 
       <!-- Add rightNavButton to open favorites -->
@@ -28,7 +28,6 @@
         class="item multiple-lines"
         v-for="(item, index) in listProperties"
         ref="itemLocs"
-        v-if="index < 10"
         >
         <img 
           class="item-primary thumbnail"
@@ -41,9 +40,22 @@
           <div>Multiple lines item</div>
           <div class="item-label item-smaller">Second line</div>
         </div>    
-
-        
       </div>
+
+
+      <div
+        v-if="listProperties.length"
+        class="item multiple-lines moreItems">
+        <div class="item-content ">
+          <button class="primary">Load more...</button>
+        </div>
+        
+        <div 
+          class="item-label item-smaller"
+          >Results for <b>{{ searchTerm }}</b> <br>
+          showing {{ listProperties.length }} of {{ totalResults }} properties</div>
+      </div> 
+      
     </div>
 
   </q-layout>
@@ -61,23 +73,23 @@ export default {
 
   data () {
     return {
+      totalResults: 0,
+      listProperties: 0,
+      searchTerm: ''
       // list: 'list'
     }
   },
 
 
   created: function () {
-    console.log(this)
+    this.totalResults = this.$store.state.totalResults
+    this.listProperties = this.$store.state.listProperties
+    this.searchTerm = this.$store.state.searchTerm
   },
 
 
   computed: {
-    count () {
-      return this.$store.state.count
-    },
-    listProperties () {
-      return this.$store.state.listProperties
-    }
+
   },
   
   methods: {
@@ -91,7 +103,7 @@ export default {
   },
 
   mounted () {
-    console.log(this)
+    // console.log(this)
   }
 }
 </script>
@@ -117,5 +129,10 @@ export default {
      width:100%
      overflow:auto
      border: none 
+
+  .moreItems
+    text-align: center  
+    >div
+       text-align: center  
     
 </style>

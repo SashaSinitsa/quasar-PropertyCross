@@ -1,3 +1,5 @@
+<!--удаление ошибок-->
+
 <template>
   <q-layout>
     <div slot="header" class="toolbar">
@@ -45,7 +47,7 @@
       </button>
 
 
-      <template v-if="(!errorMessage)&&(proposedLocations.length == 0)">
+      <template v-if="(!errorMessage)&&(proposedLocations.length == 0)&&(localStoreLength)">
         <p class="caption">
           <div class="list">
             <div
@@ -54,10 +56,10 @@
               v-for="(item, index) in getRecentSearches"
               ref="itemLocs"
               v-if="index < 7"
-              @click="search(item.slug)"
+              @click="search(item)"
               >
               <div class="item-content has-secondary">
-                <div>{{ item.name }} ({{ item.amount }})</div>
+                <div>{{ item.title }} ({{ item.amount }})</div>
               </div>
               <i class="item-secondary">keyboard_arrow_right</i>
             </div>
@@ -116,6 +118,7 @@ export default {
       location: {key: '', name: ''},
       // error: false,
       errorMessage: '',
+      localStoreLength: 0,
       items: [
         {
           label: 'kiev'
@@ -133,6 +136,7 @@ export default {
       this.q = window.device.model
       // this.s = device.model
     }
+    this.localStoreLength = this.$localStorage.get('recentSearches').length
 
     // setTimeout(() => {
     //   if (window.SpinnerDialog) {
@@ -181,19 +185,20 @@ export default {
 
       if (!string) return
 
-      if ((typeof q === 'object') && (q !== null)) {
+      if (typeof q === 'object') {
         this.location.key = q.place_name
         this.location.name = q.title
         string = q.place_name
         this.q = q.title
+        store.commit('saveSearchTerm', q.title)
       } 
       else if (q === this.location.name) {
         string = this.location.key
+        store.commit('saveSearchTerm', q)
       }
-      // console.log('string: ', string)
-
+      
       this.statusLoad = true
-      let response = searchService.search(string)
+      let response = searchService.search(string)    
       self._processSearchResponse(response)
     },
 
@@ -251,17 +256,14 @@ export default {
           switch (resCode) {
             case '100':
             case '110':
-              self._changeLocalStorage({
-                name: res.locations[0].title,
-                slug: res.locations[0].place_name,
-                amount: res.total_results
-              })
+              self._changeLocalStorage(self.proposedLocations[0], res.total_results)
               if (res.listings.length === 0) {
                 self.proposedLocations = []
                 self.errorMessage = 'There were no properties found for the given location.'
                 break
               }
               store.commit('saveListProperties', res.listings)
+              store.commit('saveTotalResults', res.total_results)
               self.goTo('/results')
               break
             case '101':
@@ -295,17 +297,17 @@ export default {
     },
 
 
-    _changeLocalStorage (obj) {
+    _changeLocalStorage (obj, amount) {
       // this.$localStorage.remove('recentSearches')
       let i = 0
       let recentSearches = this.$localStorage.get('recentSearches')
 
       for (i; i < recentSearches.length; i++) {
-        if (recentSearches[i].slug === obj.slug || i > 3) {
+        if (recentSearches[i].title === obj.title || i > 3) {
           recentSearches.splice(i, 1)
         }
       }
-
+      obj.amount = amount
       recentSearches.unshift(obj)
       this.$localStorage.set('recentSearches', recentSearches)
     },
