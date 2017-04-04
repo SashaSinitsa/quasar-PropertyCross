@@ -47,7 +47,10 @@
         v-if="listProperties.length"
         class="item multiple-lines moreItems">
         <div class="item-content ">
-          <button class="primary">Load more...</button>
+          <button 
+            v-if="listProperties.length !== totalResults"
+            class="primary"
+            @click="loadMoreProperties()">Load more...</button>
         </div>
         
         <div 
@@ -66,7 +69,8 @@
 <script>
 import router from '../router'
 import store from '../store'
-console.dir(store)
+import searchService from 'src/service/search'
+
 
 export default {
   name: 'results',
@@ -75,8 +79,8 @@ export default {
     return {
       totalResults: 0,
       listProperties: 0,
-      searchTerm: ''
-      // list: 'list'
+      searchTerm: '',
+      page: 1
     }
   },
 
@@ -99,6 +103,17 @@ export default {
 
     inc () {
       store.commit('increment', 10)
+    },
+
+    loadMoreProperties () {
+      this.page = this.page + 1
+      searchService.search(this.searchTerm, this.page) 
+        .then(res => {
+          this.listProperties = this.listProperties.concat(res.listings)
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   },
 

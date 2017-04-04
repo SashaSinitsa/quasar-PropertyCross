@@ -1,25 +1,24 @@
 // import jsonp from 'src/service/jsonp'
-import jsonp from 'src/service/axios'
+import axios from 'axios'
+
 
 const searchService = {
-  search: function (q) {
-    return jsonp.search(q)
-      .then((res) => {
-        let code = res.application_response_code
-        if (code) {
-          return res
-          // console.log('res: ', res)
-          // if (code === '200' || code === '202') {
-          //   self.locations = res.locations
-          //   console.log('unknown location')
-          // }
-          // else if (code === '100' || code === '101' || code === '110') {
-          //   self.locations = res.listings
-          // }
-          // else { console.log('Error, status code: ' + code) }
+  search: function (term, page = 1) {
+    return axios.get(
+      // 'http://api.nestoria.co.uk/api?country=uk&pretty=1&action=search_listings&encoding=json&listing_type=buy&page=1&place_name=' + term,
+      'http://api.nestoria.co.uk/api',
+      {
+        params: {
+          country: 'uk',
+          pretty: 1,
+          action: 'search_listings',
+          encoding: 'json',
+          listing_type: 'buy',
+          page: page,
+          place_name: term
         }
-        // this.ref()
       })
+      .then(res => res.data.response)
       .catch((error) => {
         console.log('errorSearch ', error)
         throw error
@@ -27,25 +26,22 @@ const searchService = {
   },
 
 
-  searchByLocation: function (location) {
-    return jsonp.getList(location)
-      .then((res) => {
-        let code = res.application_response_code
-        if (code) {
-          return res
-
-          // console.log('res: ', res)
-          // if (code === '200' || code === '202') {
-          //   self.locations = res.locations
-          //   console.log('unknown location')
-          // }
-          // else if (code === '100' || code === '101' || code === '110') {
-          //   self.locations = res.listings
-          // }
-          // else { console.log('Error, status code: ' + code) }
+  searchByLocation: function (location, page = 1) {
+    return axios.get(
+      // 'http://api.nestoria.co.uk/api?country=uk&pretty=1&action=search_listings&encoding=json&listing_type=buy&page=1&centre_point=' + location,
+      'http://api.nestoria.co.uk/api',
+      {
+        params: {
+          country: 'uk',
+          pretty: 1,
+          action: 'search_listings',
+          encoding: 'json',
+          listing_type: 'buy',
+          page: page,
+          centre_point: location
         }
-        // this.ref()
       })
+      .then(res => res.data.response)
       .catch(error => {
         console.log('errorSearch ', error)
         throw error
