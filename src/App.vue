@@ -14,4 +14,7 @@ export default {}
 
 <style lang="styl">
   @import '~src/themes/main.styl';
+
+  .arrow_left 
+    font-size: 2.2rem
 </style>

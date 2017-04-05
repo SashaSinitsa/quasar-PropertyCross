@@ -11,9 +11,9 @@
       <!-- Add rightNavButton to open favorites -->
       <button
         class="hide-on-drawer-visible"
-        @click="router.push('home')"
+        @click="goTo('/favourites')"
         >
-        Favorites
+        Favourites
       </button>
     </div>
 

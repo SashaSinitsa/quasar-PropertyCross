@@ -16,9 +16,9 @@
       <!-- Add rightNavButton to open favorites -->
       <button
         class="hide-on-drawer-visible"
-        @click="goTo('/')"
+        @click="goTo('/favourites')"
         >
-        Favorites
+        Favourites
       </button>
     </div>
 
@@ -53,7 +53,9 @@
           <button 
             v-if="listProperties.length !== totalResults"
             class="primary"
-            @click="loadMoreProperties()">Load more...</button>
+            @click="loadMoreProperties()"
+          > {{ titleButton }}
+          </button>
         </div>
         
         <div 
@@ -83,7 +85,8 @@ export default {
       totalResults: 0,
       listProperties: 0,
       searchTerm: '',
-      page: 1
+      page: 1,
+      titleButton: 'Load more...'
     }
   },
 
@@ -105,10 +108,12 @@ export default {
     },
 
     loadMoreProperties () {
+      this.titleButton = 'Loading ...'
       this.page = this.page + 1
       searchService.search(this.searchTerm, this.page) 
         .then(res => {
           this.listProperties = this.listProperties.concat(res.listings)
+          this.titleButton = 'Load more...'
           store.commit('saveListProperties', this.listProperties)
         })
         .catch(error => {
@@ -131,10 +136,6 @@ export default {
 
 
 <style lang="styl">
-
-  .arrow_left 
-    font-size: 2.275rem
-  
 
   img.item-primary.thumbnail 
     width: 80px

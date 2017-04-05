@@ -35,17 +35,13 @@
       <h5>{{ property.price_formatted }}</h5>
   
       <div class="second-title">
-        {{ property.title | untilSecondSine }}
+        {{ property.title }}
       </div>
       <p>
         <img
           :src="property.img_url" alt=""
           height="100%"> 
       </p>
-      <p>
-        {{ property.bedroom_number }} bedrooms, {{ property.bathroom_number }} bathroom, 
-      </p>
-
       <p>
         {{ property.summary }} 
       </p>
@@ -85,7 +81,7 @@ export default {
   },
   
   methods: {
-    goTo (url) {
+    goTo () {
       // router.push(url)
       router.go(-1)
     },
@@ -102,14 +98,9 @@ export default {
 
   },
 
-  filters: {
-    untilSecondSine: function (value) {
-      if (!value) return ''
-      value = value.toString()
-      return value.split(',').slice(0, 2).join(',')
-    }
+  mounted () {
+    // console.log(this)
   }
-
 }
 </script>
 

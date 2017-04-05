@@ -24,6 +24,7 @@ const router = new VueRouter({
     { path: '/default', component: load('Index') }, // Default
     { path: '/results', component: load('Results') },
     { path: '/detail', component: load('Detail') },
+    { path: '/favourites', component: load('Favourites') },
     { path: '/', component: load('Search') },
     { path: '*', component: load('Error404') } // Not found
   ]
