@@ -70,7 +70,7 @@ export default {
 
   created: function () {  
     this.property = this.$store.state.property
-    store.commit('isFavourite')
+    store.commit('isFavourite', this)
   },
 
 
@@ -86,13 +86,13 @@ export default {
     },
 
     addToFavourites () {
-      store.commit('addToFavourites')
-      store.commit('isFavourite')
+      store.commit('addToFavourites', this)
+      store.commit('isFavourite', this)
     },
 
     removeFromFavourites () {
-      store.commit('removeFromFavourites')
-      store.commit('isFavourite')
+      store.commit('removeFromFavourites', this)
+      store.commit('isFavourite', this)
     }
 
   },

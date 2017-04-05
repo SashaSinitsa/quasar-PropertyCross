@@ -25,6 +25,10 @@ Quasar.start(() => {
       recentSearches: {
         type: Array,
         default: []
+      },
+      favourites: {
+        type: Array,
+        default: []
       }
     },
     

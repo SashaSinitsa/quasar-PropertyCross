@@ -33,23 +33,25 @@ const mutations = {
     state.property = property
   },
 
-  addToFavourites () {
-    state.favourites.push(state.property)
+  addToFavourites (state, self) {
+    let arr = self.$localStorage.get('favourites')
+    arr.push(state.property)
+    self.$localStorage.set('favourites', arr) 
   },
 
-  removeFromFavourites (state) {
-    const index = state.favourites.findIndex(fav => fav.lister_url === state.property.lister_url)
+  removeFromFavourites (state, self) {  
+    let arr = self.$localStorage.get('favourites')
+    let index = arr.findIndex(fav => fav.lister_url === state.property.lister_url)
     if (index !== -1) {
-      state.favourites.splice(index, 1)
+      arr.splice(index, 1)
     }
+    self.$localStorage.set('favourites', arr)
   },
 
-  isFavourite (state) {
-    const index = state.favourites.findIndex(fav => fav.lister_url === state.property.lister_url)   
-    if (index !== -1) {
-      state.isFavourite = true
-    }
-    else state.isFavourite = false
+  isFavourite (state, self) {
+    let arr = self.$localStorage.get('favourites')
+    let index = arr.findIndex(fav => fav.lister_url === state.property.lister_url)
+    state.isFavourite = (index !== -1)
   }
 }
 
