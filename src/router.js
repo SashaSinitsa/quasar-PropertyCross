@@ -23,6 +23,7 @@ const router = new VueRouter({
   routes: [
     { path: '/default', component: load('Index') }, // Default
     { path: '/results', component: load('Results') },
+    { path: '/detail', component: load('Detail') },
     { path: '/', component: load('Search') },
     { path: '*', component: load('Error404') } // Not found
   ]

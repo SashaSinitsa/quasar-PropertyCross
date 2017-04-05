@@ -18,7 +18,8 @@
     </div>
 
     <div class="layout-padding">
-      <p class="caption" @click="goTo('results')">Use the form below to search for houses to buy.
+      <p class="caption">
+        Use the form below to search for houses to buy.
         You can search by place-name, postcode, or click 'My location',
         to search in your current location!
       </p>

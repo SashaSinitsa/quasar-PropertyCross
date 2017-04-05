@@ -28,6 +28,7 @@
         class="item multiple-lines"
         v-for="(item, index) in listProperties"
         ref="itemLocs"
+        @click="goTo('detail'); saveProperty(item)"
         >
         <img 
           class="item-primary thumbnail"
@@ -37,8 +38,10 @@
           <div>
             {{ item.price_formatted }}
           </div>
-          <div>Multiple lines item</div>
-          <div class="item-label item-smaller">Second line</div>
+
+          <div class="item-label item-smaller">
+            {{ item.title }}
+          </div>
         </div>    
       </div>
 
@@ -101,19 +104,20 @@ export default {
       router.push(url)
     },
 
-    inc () {
-      store.commit('increment', 10)
-    },
-
     loadMoreProperties () {
       this.page = this.page + 1
       searchService.search(this.searchTerm, this.page) 
         .then(res => {
           this.listProperties = this.listProperties.concat(res.listings)
+          store.commit('saveListProperties', this.listProperties)
         })
         .catch(error => {
           console.log(error)
         })
+    },
+
+    saveProperty (property) {
+      store.commit('saveProperty', property)
     }
   },
 
