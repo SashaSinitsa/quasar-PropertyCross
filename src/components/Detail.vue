@@ -43,7 +43,12 @@
           height="100%"> 
       </p>
       <p>
-        {{ property.bedroom_number }} bedrooms, {{ property.bathroom_number }} bathroom, 
+        {{ property.bedroom_number }} 
+        <span v-if="property.bedroom_number>1">bedrooms,</span>
+        <span v-else>bedroom,</span>
+        {{ property.bathroom_number }}
+        <span v-if="property.bathroom_number>1"> bathrooms</span>
+        <span v-else>bathroom</span>
       </p>
 
       <p>

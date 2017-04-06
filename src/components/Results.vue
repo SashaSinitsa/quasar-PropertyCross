@@ -28,7 +28,7 @@
         class="item multiple-lines"
         v-for="(item, index) in listProperties"
         ref="itemLocs"
-        @click="goTo('detail'); saveProperty(item)"
+        @click="goTo('detail'); rememberProperty(item)"
         >
         <img 
           class="item-primary thumbnail"
@@ -121,8 +121,8 @@ export default {
         })
     },
 
-    saveProperty (property) {
-      store.commit('saveProperty', property)
+    rememberProperty (property) {
+      store.commit('rememberProperty', property)
     }
   },
 

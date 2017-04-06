@@ -3,51 +3,44 @@
     <div slot="header" class="toolbar">
       <button
         class="hide-on-drawer-visible"
-        @click="goTo()"
+        @click="goTo(-1)"
         >
         <i class="arrow_left">keyboard_arrow_left</i>
       </button>
 
       <!-- Show title in NavigationWindow's toolbar -->
       <q-toolbar-title>
-        Property details
+        Favourites
       </q-toolbar-title>
 
-      <!-- Add rightNavButton to open favorites -->
-      <div
-        v-if="!isFavourite"
-        @click="addToFavourites()"
-        >
-        <i>star_border</i>
-      </div>
-
-      <div
-        v-if="isFavourite"
-        @click="removeFromFavourites()"
-        >
-        <i>star</i>
-      </div>
-
     </div>
 
-    <div class="layout-padding">
 
-      <h5>{{ property.price_formatted }}</h5>
-  
-      <div class="second-title">
-        {{ property.title }}
+    <div class="list item-delimiter list-property">
+      <div
+        class="item multiple-lines"
+        v-for="(item, index) in listProperties"
+        ref="itemLocs"
+        @click="goTo('detail'); rememberProperty(item)"
+        >
+        <img 
+          class="item-primary thumbnail"
+          :src="item.thumb_url"
+          >
+        <div class="item-content has-secondary">
+          <div>
+            {{ item.price_formatted }}
+          </div>
+
+          <div class="item-label item-smaller">
+            {{ item.title }}
+          </div>
+        </div>    
       </div>
-      <p>
-        <img
-          :src="property.img_url" alt=""
-          height="100%"> 
-      </p>
-      <p>
-        {{ property.summary }} 
-      </p>
 
+      
     </div>
-     
+
   </q-layout>
 </template>
 
@@ -59,48 +52,31 @@ import store from '../store'
 
 
 export default {
-  name: 'detail',
+  name: 'favourites',
 
   data () {
     return {
-      property: {}
+      listProperties: 0
     }
   },
 
 
-  created: function () {  
-    this.property = this.$store.state.property
-    store.commit('isFavourite', this)
+  created: function () {
+    this.listProperties = this.$localStorage.get('favourites')
   },
 
 
-  computed: {
-    isFavourite () {
-      return this.$store.state.isFavourite
-    }
-  },
   
   methods: {
-    goTo () {
-      // router.push(url)
-      router.go(-1)
+    goTo (url) {
+      typeof url === 'number' ? router.go(url) : router.push(url)
     },
 
-    addToFavourites () {
-      store.commit('addToFavourites', this)
-      store.commit('isFavourite', this)
-    },
-
-    removeFromFavourites () {
-      store.commit('removeFromFavourites', this)
-      store.commit('isFavourite', this)
+    rememberProperty (property) {
+      store.commit('rememberProperty', property)
     }
-
-  },
-
-  mounted () {
-    // console.log(this)
   }
+
 }
 </script>
 
@@ -108,12 +84,18 @@ export default {
 
 
 <style lang="styl">
-  .second-title 
-    padding-bottom 14px
-    font-weight 500
-    font-size 150%
 
-  i
-    font-size 200%
-
+  img.item-primary.thumbnail 
+    width: 80px
+    height: 60px
+    top: 10px
+    border-radius: 3px
+    ~.item-content
+      margin-left: 110px
+  
+  .list-property
+     width:100%
+     overflow:auto
+     border: none 
+    
 </style>

@@ -76,6 +76,7 @@
         </p>
       </template>
       
+
       <template v-if="proposedLocations.length !== 0">
         <p class="caption">
           Please select a location below: 
@@ -117,9 +118,9 @@ export default {
       proposedLocations: [],
       statusLoad: false,
       location: {key: '', name: ''},
-      // error: false,
       errorMessage: '',
       localStoreLength: 0,
+      hideItems: false,
       items: [
         {
           label: 'kiev'
@@ -138,13 +139,6 @@ export default {
       // this.s = device.model
     }
     this.localStoreLength = this.$localStorage.get('recentSearches').length
-
-    // setTimeout(() => {
-    //   if (window.SpinnerDialog) {
-    //     this.s = this.cordova
-    //     SpinnerDialog.show(window.device.model)
-    //   }
-    // }, 6000)
   },
 
   computed: {
@@ -155,20 +149,8 @@ export default {
 
     getRecentSearches: function () {
       return this.$localStorage.get('recentSearches')
-    },
-    
-
-    hideItems: function () {
-      // return {
-      //   background: 'white'
-      // }
-    },
-
-    // геттер вычисляемого значения
-    reversedMessage: function () {
-      // `this` указывает на экземпляр vm
-      // return this.message.split('').reverse().join('')
     }
+  
   },
 
   methods: {

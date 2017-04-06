@@ -12,7 +12,6 @@ const state = {
   listProperties: [],
   searchTerm: '',
   property: {},
-  favourites: [],
   isFavourite: false
 }
 
@@ -29,7 +28,7 @@ const mutations = {
     state.searchTerm = q
   },
 
-  saveProperty (state, property) {
+  rememberProperty (state, property) {
     state.property = property
   },
 
