@@ -131,7 +131,7 @@ export default {
 
   img
     display block
-    max-width 98%
+    max-width 100%
     margin 0 auto
 
 </style>
