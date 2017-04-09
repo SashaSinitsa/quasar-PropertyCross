@@ -8,6 +8,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
+  self: {},
   totalResults: 0,
   listProperties: [],
   searchTerm: '',
@@ -16,6 +17,10 @@ const state = {
 }
 
 const mutations = {
+  initLocalStorage (state, self) {
+    state.self = self
+  },
+
   saveTotalResults (state, n) {
     state.totalResults = n
   },
@@ -32,23 +37,23 @@ const mutations = {
     state.property = property
   },
 
-  addToFavourites (state, self) {
-    let arr = self.$localStorage.get('favourites')
+  addToFavourites (state) {
+    let arr = state.self.$localStorage.get('favourites')
     arr.push(state.property)
-    self.$localStorage.set('favourites', arr) 
+    state.self.$localStorage.set('favourites', arr) 
   },
 
-  removeFromFavourites (state, self) {  
-    let arr = self.$localStorage.get('favourites')
+  removeFromFavourites (state) {  
+    let arr = state.self.$localStorage.get('favourites')
     let index = arr.findIndex(fav => fav.lister_url === state.property.lister_url)
     if (index !== -1) {
       arr.splice(index, 1)
     }
-    self.$localStorage.set('favourites', arr)
+    state.self.$localStorage.set('favourites', arr)
   },
 
-  isFavourite (state, self) {
-    let arr = self.$localStorage.get('favourites')
+  isFavourite (state) {
+    let arr = state.self.$localStorage.get('favourites')
     let index = arr.findIndex(fav => fav.lister_url === state.property.lister_url)
     state.isFavourite = (index !== -1)
   }

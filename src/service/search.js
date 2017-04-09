@@ -8,6 +8,7 @@ const searchService = {
       // 'http://api.nestoria.co.uk/api?country=uk&pretty=1&action=search_listings&encoding=json&listing_type=buy&page=1&place_name=' + term,
       'http://api.nestoria.co.uk/api',
       {
+        timeout: 5000,
         params: {
           country: 'uk',
           pretty: 1,
@@ -31,6 +32,7 @@ const searchService = {
       // 'http://api.nestoria.co.uk/api?country=uk&pretty=1&action=search_listings&encoding=json&listing_type=buy&page=1&centre_point=' + location,
       'http://api.nestoria.co.uk/api',
       {
+        timeout: 5000,
         params: {
           country: 'uk',
           pretty: 1,

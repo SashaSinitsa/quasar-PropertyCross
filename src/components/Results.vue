@@ -25,7 +25,7 @@
 
     <div class="list item-delimiter list-property">
       <div
-        class="item multiple-lines"
+        class="item multiple-lines item-height"
         v-for="(item, index) in listProperties"
         ref="itemLocs"
         @click="goTo('detail'); rememberProperty(item)"
@@ -34,7 +34,7 @@
           class="item-primary thumbnail"
           :src="item.thumb_url"
           >
-        <div class="item-content has-secondary">
+        <div class="item-content has-secondary item-height">
           <div>
             {{ item.price_formatted }}
           </div>
@@ -42,7 +42,8 @@
           <div class="item-label item-smaller">
             {{ item.title }}
           </div>
-        </div>    
+        </div>   
+        <i class="item-secondary arrow-right">keyboard_arrow_right</i>
       </div>
 
 
@@ -60,7 +61,7 @@
         
         <div 
           class="item-label item-smaller"
-          >Results for <b>{{ searchTerm }}</b> <br>
+          >Results for <b> &#8221;{{ searchTerm }}&#8221; </b> <br>
           showing {{ listProperties.length }} of {{ totalResults }} properties</div>
       </div> 
       
@@ -155,4 +156,17 @@ export default {
     >div
        text-align: center  
     
+  .item-height 
+    height 80px   
+    max-height 80px
+    overflow hide
+    .item-smaller
+      height 32px
+      max-height 32px
+      overflow hidden
+      text-overflow clip
+    .arrow-right
+      height 56px
+      line-height 56px
+
 </style>

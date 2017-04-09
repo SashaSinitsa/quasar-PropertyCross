@@ -38,9 +38,7 @@
         {{ property.title | untilSecondSine }}
       </div>
       <p>
-        <img
-          :src="property.img_url" alt=""
-          height="100%"> 
+        <img :src="property.img_url" alt=""> 
       </p>
       <p>
         {{ property.bedroom_number }} 
@@ -79,7 +77,7 @@ export default {
 
   created: function () {  
     this.property = this.$store.state.property
-    store.commit('isFavourite', this)
+    store.commit('isFavourite')
   },
 
 
@@ -96,13 +94,13 @@ export default {
     },
 
     addToFavourites () {
-      store.commit('addToFavourites', this)
-      store.commit('isFavourite', this)
+      store.commit('addToFavourites')
+      store.commit('isFavourite')
     },
 
     removeFromFavourites () {
-      store.commit('removeFromFavourites', this)
-      store.commit('isFavourite', this)
+      store.commit('removeFromFavourites')
+      store.commit('isFavourite')
     }
 
   },
@@ -122,6 +120,7 @@ export default {
 
 
 <style lang="styl">
+
   .second-title 
     padding-bottom 14px
     font-weight 500
@@ -129,5 +128,10 @@ export default {
 
   i
     font-size 200%
+
+  img
+    display block
+    max-width 98%
+    margin 0 auto
 
 </style>

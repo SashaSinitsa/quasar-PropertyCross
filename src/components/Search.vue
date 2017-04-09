@@ -26,10 +26,10 @@
 
       <p 
         class="search"
-        @keyup.enter="search(q)"
+        @keyup.enter="search(term)"
         >
         <q-search 
-          v-model="q" 
+          v-model="term" 
           placeholder="Search"
           :icon="showIcon"
           class="p-search"
@@ -40,7 +40,7 @@
       </p>
 
 
-      <button class="primary" @click="search(q)">
+      <button class="primary" @click="search(term)">
         Go
       </button>
       <button class="primary" @click="searchByLocation()">
@@ -114,7 +114,7 @@ import store from '../store'
 export default {
   data () {
     return {
-      q: 'va',
+      term: '',
       proposedLocations: [],
       statusLoad: false,
       location: {key: '', name: ''},
@@ -135,10 +135,11 @@ export default {
   /* eslint-disable no-undef */
   created: function () {
     if (window.device) {
-      this.q = window.device.model
+      this.term = window.device.model
       // this.s = device.model
     }
     this.localStoreLength = this.$localStorage.get('recentSearches').length
+    store.commit('initLocalStorage', this)
   },
 
   computed: {
@@ -160,24 +161,24 @@ export default {
     },
 
 
-    search (q) {
+    search (term) {
       console.log('search()')
       let self = this
-      let string = q
+      let string = term
       this.errorMessage = ''
 
       if (!string) return
 
-      if (typeof q === 'object') {
-        this.location.key = q.place_name
-        this.location.name = q.title
-        string = q.place_name
-        this.q = q.title
-        store.commit('saveSearchTerm', q.title)
+      if (typeof term === 'object') {
+        this.location.key = term.place_name
+        this.location.name = term.title
+        string = term.place_name
+        this.term = term.title
+        store.commit('saveSearchTerm', term.title)
       } 
-      else if (q === this.location.name) {
+      else if (term === this.location.name) {
         string = this.location.key
-        store.commit('saveSearchTerm', q)
+        store.commit('saveSearchTerm', term)
       }
       
       this.statusLoad = true
@@ -190,7 +191,7 @@ export default {
       console.log('searchByLocation()')
       
       let self = this
-      this.q = ''
+      this.term = ''
       this.errorMessage = ''
       this.statusLoad = true
 
@@ -204,8 +205,7 @@ export default {
     _getMyLocation (callback) {
       console.log('getMyLocation()')
       let self = this
-      console.log(localStorage.getItem('id'))
-      localStorage.setItem('id', '11')
+      const options = { timeout: 4000 }
       if (!navigator.geolocation) {
         self.errorMessage = 'The use of location is currently disabled.'
         self.statusLoad = false
@@ -224,7 +224,7 @@ export default {
         console.log('Unable to retrieve your location')
       }
 
-      navigator.geolocation.getCurrentPosition(success, error)
+      navigator.geolocation.getCurrentPosition(success, error, options)
     },
 
     _processSearchResponse (response) {
@@ -235,6 +235,7 @@ export default {
         .then((res) => {          
           let resCode = res.application_response_code
           self.proposedLocations = res.locations
+          self.statusLoad = false
 
           switch (resCode) {
             case '100':
@@ -267,7 +268,6 @@ export default {
               self.errorMessage = 'There was a problem with your search.'
               console.error('status_code: ', res.status_code, res.application_response_text)
           }
-          self.statusLoad = false
         })
         .catch((err) => {
           // if (err.status === 408) {
@@ -325,5 +325,18 @@ export default {
 
 
 <style lang="styl">
-  @import 'search.styl';
+  @import '~src/themes/app.variables.styl';
+
+  .layout
+    .layout-padding
+      width 100%
+  .search
+    position relative
+    .p-search
+      input
+        height 40px
+    .spinner
+      position absolute
+      top 4px
+      left 4px
 </style>
