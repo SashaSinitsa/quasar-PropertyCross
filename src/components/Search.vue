@@ -8,7 +8,7 @@
         <div id="title">PropertyCross!</div>  
       </q-toolbar-title>
 
-      <!-- Add rightNavButton to open favorites -->
+      <!-- Add rightNavButton to open favourites -->
       <button
         class="hide-on-drawer-visible"
         @click="goTo('/favourites')"
@@ -17,6 +17,7 @@
       </button>
     </div>
 
+    <!-- Wrap rest of view, adding padding using global classes -->
     <div class="layout-padding">
       <p class="caption">
         Use the form below to search for houses to buy.
@@ -35,7 +36,7 @@
           class="p-search"
           />
 
-        <!-- Add activityIndicator -->  
+        <!-- Add activityIndicator to q-search to show while searching -->  
         <spinner v-show="statusLoad" class="spinner" color="#888" :size="25" name="ios"></spinner>
       </p>
 
@@ -47,7 +48,7 @@
         My Location
       </button>
 
-
+      <!-- Wrap list of  recent locations -->
       <template v-if="(!errorMessage)&&(proposedLocations.length == 0)&&(localStoreLength)">
         <p class="caption">
           <div class="list">
@@ -69,14 +70,14 @@
        </template>
 
 
-      <!-- Create list of items -->
+      <!-- Show errors -->
       <template v-if="errorMessage">
         <p class="caption">
           {{ errorMessage }}
         </p>
       </template>
       
-
+      <!-- Wrap list of ambiguous locations -->
       <template v-if="proposedLocations.length !== 0">
         <p class="caption">
           Please select a location below: 
@@ -120,24 +121,17 @@ export default {
       location: {key: '', name: ''},
       errorMessage: '',
       localStoreLength: 0,
-      hideItems: false,
-      items: [
-        {
-          label: 'kiev'
-        },
-        {
-          label: 'kharkov'
-        }
-      ]
+      hideItems: false
     }
   },
 
   /* eslint-disable no-undef */
   created: function () {
-    if (window.device) {
-      this.term = window.device.model
-      // this.s = device.model
-    }
+    // if (window.device) {
+    //   this.term = window.device.model
+    // }
+
+    // Get a length of the list of recent searches from local store
     this.localStoreLength = this.$localStorage.get('recentSearches').length
     store.commit('initLocalStorage', this)
   },
@@ -148,6 +142,7 @@ export default {
       return this.statusLoad ? '' : 'search'
     },
 
+    // Get a list of recent searches from local store
     getRecentSearches: function () {
       return this.$localStorage.get('recentSearches')
     }
@@ -162,13 +157,15 @@ export default {
 
 
     search (term) {
-      console.log('search()')
       let self = this
       let string = term
       this.errorMessage = ''
 
+      // If the search string is empty, exit the function
       if (!string) return
 
+      // Called when user taps on a ambiguous/recent location
+      // An object is passed to the function, then we extract the string to search from the object
       if (typeof term === 'object') {
         this.location.key = term.place_name
         this.location.name = term.title
@@ -176,6 +173,8 @@ export default {
         this.term = term.title
         store.commit('saveSearchTerm', term.title)
       } 
+      // If the value of the field term is equal to the name of the last location,
+      // make a query with the key of this location
       else if (term === this.location.name) {
         string = this.location.key
         store.commit('saveSearchTerm', term)
@@ -187,23 +186,21 @@ export default {
     },
 
 
-    searchByLocation () {
-      console.log('searchByLocation()')
-      
+    searchByLocation () {      
       let self = this
       this.term = ''
       this.errorMessage = ''
       this.statusLoad = true
 
+      // Start your search by geo
       this._getMyLocation(function (latitude, longitude) {
         let response = searchService.searchByLocation(latitude + ',' + longitude)
         self._processSearchResponse(response)
       })
     },
 
-
+    // Get the coordinates and run the callback if the coordinates are received
     _getMyLocation (callback) {
-      console.log('getMyLocation()')
       let self = this
       const options = { timeout: 4000 }
       if (!navigator.geolocation) {
@@ -213,10 +210,12 @@ export default {
         return
       }
 
+      // If the coordinates are received, run the callback
       let success = function (position) { 
         callback(position.coords.latitude, position.coords.longitude)
       }
 
+      // If the coordinates are not received, show an error
       let error = function () {
         self.errorMessage = `Unable to detect current location. Please ensure
            location is turned on in your phone settings and try again.`
@@ -227,8 +226,8 @@ export default {
       navigator.geolocation.getCurrentPosition(success, error, options)
     },
 
+    // Subscribe to the promises and process the response code
     _processSearchResponse (response) {
-      console.log('processSearchResponse')
       let self = this
 
       response      
@@ -238,8 +237,8 @@ export default {
           self.statusLoad = false
 
           switch (resCode) {
-            case '100':
-            case '110':
+            case '100': // listings returned for one unambiguous location
+            case '110': // listings returned, location very large
               self._changeLocalStorage(self.proposedLocations[0], res.total_results)
               if (res.listings.length === 0) {
                 self.proposedLocations = []
@@ -250,13 +249,17 @@ export default {
               store.commit('saveTotalResults', res.total_results)
               self.goTo('/results')
               break
-            case '101':
+
+            
+            case '101': // listings returned for best guess of ambiguous location 
               // self.proposedLocations = res.locations
               self._getClientHeightTable()
               break
-            case '200':
-            case '201':
-            case '202':
+
+            
+            case '200': // ambiguous location
+            case '201': // unknown location
+            case '202': // misspelled location
               if (res.application_response_text === 'unknown location') {
                 self.errorMessage = 'The location given was not recognised.'
               }
@@ -269,8 +272,10 @@ export default {
               console.error('status_code: ', res.status_code, res.application_response_text)
           }
         })
+
+        // Show the error to the user
         .catch((err) => {
-          // if (err.status === 408) {
+          // if (err.status === 408) {  // timeout
           self.errorMessage = `An error occurred while searching.
             Please check your network connection and try again.`
           // }
@@ -280,11 +285,13 @@ export default {
     },
 
 
+    // Save search history
     _changeLocalStorage (obj, amount) {
       // this.$localStorage.remove('recentSearches')
       let i = 0
       let recentSearches = this.$localStorage.get('recentSearches')
 
+      // Set the length of the story
       for (i; i < recentSearches.length; i++) {
         if (recentSearches[i].title === obj.title || i > 3) {
           recentSearches.splice(i, 1)
@@ -296,8 +303,8 @@ export default {
     },
 
 
+    // Calculate the maximum number of elements that can be displayed on the user's screen
     _getClientHeightTable () {
-      console.log('_getClientHeightTable()')
       var self = this
       var height = document.documentElement.clientHeight
       if (self.$refs.itemLocs && self.$refs.itemLocs.length !== 0) {
@@ -314,10 +321,8 @@ export default {
           self._getClientHeightTable()
         }, 100)
       }
-    },
+    }
 
-    openFavorites () {},
-    clickedOnItem () {}
   }
 }
 </script>

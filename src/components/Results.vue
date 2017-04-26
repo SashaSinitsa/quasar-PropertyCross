@@ -22,7 +22,7 @@
       </button>
     </div>
 
-
+    <!-- Create list of properties and set event listener for tapping on the items -->
     <div class="list item-delimiter list-property">
       <div
         class="item multiple-lines item-height"
@@ -46,7 +46,7 @@
         <i class="item-secondary arrow-right">keyboard_arrow_right</i>
       </div>
 
-
+      <!-- Add button to load more properties -->
       <div
         v-if="listProperties.length"
         class="item multiple-lines moreItems">
@@ -59,6 +59,7 @@
           </button>
         </div>
         
+        <!-- Calculate the number of displayed and unloaded properties -->
         <div 
           class="item-label item-smaller"
           >Results for <b> &#8221;{{ searchTerm }}&#8221; </b> <br>
@@ -93,21 +94,20 @@ export default {
 
 
   created: function () {
+    // Get all data using vuex
     this.totalResults = this.$store.state.totalResults
     this.listProperties = this.$store.state.listProperties
     this.searchTerm = this.$store.state.searchTerm
   },
 
-
-  computed: {
-
-  },
   
   methods: {
+
     goTo (url) {
       router.push(url)
     },
 
+    // Makes a new request to the server and adds the received items 
     loadMoreProperties () {
       this.titleButton = 'Loading ...'
       this.page = this.page + 1
@@ -122,14 +122,12 @@ export default {
         })
     },
 
+    // Save the current active property (item)
     rememberProperty (property) {
       store.commit('rememberProperty', property)
     }
-  },
-
-  mounted () {
-    // console.log(this)
   }
+
 }
 </script>
 

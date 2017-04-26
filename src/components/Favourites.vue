@@ -16,12 +16,14 @@
 
     </div>
 
+    <!-- Show if list of favourites is empty -->
     <div v-if="listProperties.length===0" class="layout-padding">
       <p  lass="caption">
         You have not added any properties to your favourites.
       </p>
     </div>
 
+    <!-- Show if list of favourites is not empty -->
     <div v-else class="list item-delimiter list-property">
       <div
         class="item multiple-lines item-height"
@@ -70,16 +72,20 @@ export default {
 
 
   created: function () {
+    // Get the current active property
     this.listProperties = this.$localStorage.get('favourites')
   },
 
 
   
   methods: {
+
+    // Go back or go to URL
     goTo (url) {
       typeof url === 'number' ? router.go(url) : router.push(url)
     },
 
+    // Save the current active property (item)
     rememberProperty (property) {
       store.commit('rememberProperty', property)
     }

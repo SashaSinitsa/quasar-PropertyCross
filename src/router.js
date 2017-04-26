@@ -21,7 +21,6 @@ const router = new VueRouter({
    */
 
   routes: [
-    { path: '/default', component: load('Index') }, // Default
     { path: '/results', component: load('Results') },
     { path: '/detail', component: load('Detail') },
     { path: '/favourites', component: load('Favourites') },

@@ -1,6 +1,11 @@
+ /*
+  * Not used
+  */
 import Vue from 'vue'
 import VueJsonp from 'vue-jsonp'
 
+
+// The second argument specifies the timeout
 Vue.use(VueJsonp, 5000)
 
 const jsonp = {

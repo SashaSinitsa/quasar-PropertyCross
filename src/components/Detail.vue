@@ -13,7 +13,7 @@
         Property details
       </q-toolbar-title>
 
-      <!-- Add rightNavButton to open favorites -->
+      <!-- Add button to add an item to the favourites -->
       <div
         v-if="!isFavourite"
         @click="addToFavourites()"
@@ -21,6 +21,7 @@
         <i>star_border</i>
       </div>
 
+      <!-- Add button to remove an item from the Favorites -->
       <div
         v-if="isFavourite"
         @click="removeFromFavourites()"
@@ -30,6 +31,7 @@
 
     </div>
 
+    <!-- Wrap rest of view, adding padding using global classes -->
     <div class="layout-padding">
 
       <h5>{{ property.price_formatted }}</h5>
@@ -76,12 +78,14 @@ export default {
 
 
   created: function () {  
+    // Get the current active property
     this.property = this.$store.state.property
     store.commit('isFavourite')
   },
 
 
   computed: {
+    // Check if the property is in the favorites list
     isFavourite () {
       return this.$store.state.isFavourite
     }
@@ -93,11 +97,13 @@ export default {
       router.go(-1)
     },
 
+    // Add the property in the favorites list
     addToFavourites () {
       store.commit('addToFavourites')
       store.commit('isFavourite')
     },
 
+    // Remove the property from the favorites list
     removeFromFavourites () {
       store.commit('removeFromFavourites')
       store.commit('isFavourite')
@@ -105,6 +111,7 @@ export default {
 
   },
 
+  // Truncates a string to the second comma
   filters: {
     untilSecondSine: function (value) {
       if (!value) return ''
